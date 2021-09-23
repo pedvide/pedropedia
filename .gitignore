@@ -1,2 +1,8 @@
 .env
 
+__pycache__
+*.pyc
+*.egg-info
+.vscode
+
+sql_app.db
