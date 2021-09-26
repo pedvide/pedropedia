@@ -6,6 +6,15 @@ body {
 
   font-family: sans-serif;
 }
+@media only screen and (max-width: 960px) {
+  body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    font-family: sans-serif;
+  }
+}
 
 header {
   margin-top: 100px;
