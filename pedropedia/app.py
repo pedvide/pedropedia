@@ -50,5 +50,5 @@ async def build_page(request: Request, db: sqlite3.Cursor = Depends(get_db)):
     add_some_content(db)
     content, is_true = get_daily_content(db)
     return templates.TemplateResponse(
-        "index.html", {"request": request, "content": content, "is_true": is_true}
+        "index.html", {"request": request, "content": content, "isTrue": is_true}
     )

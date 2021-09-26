@@ -19,10 +19,16 @@
       <p>{{ content }}</p>
       <h4>
         <div class="button-bar">
-          <div class="button-holder" id="right-answer">
+          <div
+            class="button-holder"
+            id="{% if isTrue %}right-answer{% else %}wrong-answer{% endif %}"
+          >
             <span class="button" id="btn-true">True</span>
           </div>
-          <div class="button-holder" id="wrong-answer">
+          <div
+            class="button-holder"
+            id="{% if isTrue %}wrong-answer{% else %}right-answer{% endif %}"
+          >
             <span class="button" id="btn-false">False</span>
           </div>
         </div>
@@ -82,12 +88,7 @@
             sourceSampler: party.sources.dynamicSource(wrongButton),
             angle: party.variation.range(-180, 0),
             initialSpeed: 400,
-            initialColor: party.variation.gradientSample(
-              party.Gradient.simple(
-                party.Color.fromHex("#ffa68d"),
-                party.Color.fromHex("#fd3a84")
-              )
-            ),
+            initialLifetime: party.variation.range(6, 8),
           },
           rendererOptions: {
             shapeFactory: wrongAnswerSVG,
