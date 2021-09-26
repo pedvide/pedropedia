@@ -1,25 +1,18 @@
 body {
-  height: 100vh;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-
+  margin: auto;
+  padding: 0px 1em;
+  width: 960px;
   font-family: sans-serif;
 }
 @media only screen and (max-width: 960px) {
   body {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-
-    font-family: sans-serif;
   }
 }
 
 header {
   margin-top: 100px;
   margin-bottom: 50px;
-  min-height: 50px;
   text-align: center;
   font-family: "Linux Libertine", "Georgia", "Times", serif;
 }
@@ -29,13 +22,12 @@ main {
 }
 
 footer {
-  min-height: 50px;
-  margin-left: 30px;
+  margin-left: 20px;
   margin-top: auto;
 }
 
 span.button {
-  background-color: #555555; /* gray */
+  background-color: #555555;
   border: none;
   color: white;
   padding: 0.25em 1em;
@@ -47,13 +39,13 @@ span.button {
 
 #btn-true.button {
   background-color: green;
-} /* red */
+}
 #btn-true.button:hover {
   background-color: #555555;
 }
 #btn-false.button {
   background-color: #f44336;
-} /* blue */
+}
 #btn-false.button:hover {
   background-color: #555555;
 }
