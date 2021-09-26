@@ -27,15 +27,22 @@ def get_db():
 
 
 def add_some_content(db: sqlite3.Cursor):
-    # db.execute("CREATE TABLE facts (date date, post text, is_true int)")
-    db.execute("INSERT INTO facts VALUES ('2021-09-23', 'First fact', 1)")
+    db.execute(
+        """CREATE TABLE IF NOT EXISTS facts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date date UNIQUE NOT NULl,
+        post TEXT UNIQUE NOT NULl,
+        is_true INTEGER NOT NULl,
+        num_true INTEGER,
+        num_false INTEGER
+        )"""
+    )
+    # db.execute("INSERT INTO facts VALUES ('2021-09-23', 'First fact', 1)")
 
 
 def get_daily_content(db: sqlite3.Cursor):
     today = datetime.date.today()
-    db.execute(
-        "SELECT post, is_true FROM facts where date=:today LIMIT 10", {"today": today}
-    )
+    db.execute("SELECT post, is_true FROM facts where date=:today", {"today": today})
     response = db.fetchone()
     if response:
         post, is_true = response
