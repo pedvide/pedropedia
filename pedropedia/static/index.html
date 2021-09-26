@@ -8,14 +8,93 @@
       type="text/css"
       href="{{ url_for('static', path='/style.css') }}"
     />
+    <script src="https://cdn.jsdelivr.net/npm/party-js@latest/bundle/party.min.js"></script>
     <title>Pedropedia</title>
   </head>
   <body>
     <header>
       <h1>Welcome to Pedropedia</h1>
-      <h2>{{ content }}</h2>
-      <h3>True or False?</h3>
     </header>
+    <main>
+      <p>{{ content }}</p>
+      <h4>
+        <div class="button-bar">
+          <div class="button-holder" id="right-answer">
+            <span class="button" id="btn-true">True</span>
+          </div>
+          <div class="button-holder" id="wrong-answer">
+            <span class="button" id="btn-false">False</span>
+          </div>
+        </div>
+      </h4>
+      <div id="wrapper"></div>
+    </main>
     <footer>Pedropedia: A truly useless project</footer>
+
+    <script>
+      document
+        .querySelector("#right-answer")
+        .addEventListener("click", function (e) {
+          party.confetti(this, {
+            count: party.variation.range(20, 40),
+          });
+        });
+
+      const wrongButton = document.querySelector("#wrong-answer");
+
+      const wrongAnswerEmoji = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+      wrongAnswerEmoji.setAttribute("x", "0");
+      wrongAnswerEmoji.setAttribute("y", "1em");
+      wrongAnswerEmoji.setAttribute("font-size", "16");
+      wrongAnswerEmoji.setAttribute("fill", "#000000");
+      wrongAnswerEmoji.textContent = "💩";
+      const wrongAnswerSVG = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "svg"
+      );
+      wrongAnswerSVG.setAttribute("height", "20");
+      wrongAnswerSVG.setAttribute("width", "20");
+      wrongAnswerSVG.appendChild(wrongAnswerEmoji);
+
+      wrongButton.addEventListener("click", function (e) {
+        party.scene.current.createEmitter({
+          emitterOptions: {
+            loops: 1,
+            useGravity: true,
+            modules: [
+              new party.ModuleBuilder()
+                .drive("size")
+                .by((t) => 1 + 0.3 * (Math.cos(t * 10) + 1))
+                .build(),
+              new party.ModuleBuilder()
+                .drive("rotation")
+                .by((t) => new party.Vector(0, 100, 100).scale(t))
+                .relative()
+                .build(),
+            ],
+          },
+          emissionOptions: {
+            rate: 0,
+            bursts: [{ time: 0, count: party.variation.skew(30, 10) }],
+            sourceSampler: party.sources.dynamicSource(wrongButton),
+            angle: party.variation.range(-180, 0),
+            initialSpeed: 400,
+            initialColor: party.variation.gradientSample(
+              party.Gradient.simple(
+                party.Color.fromHex("#ffa68d"),
+                party.Color.fromHex("#fd3a84")
+              )
+            ),
+          },
+          rendererOptions: {
+            shapeFactory: wrongAnswerSVG,
+            applyLighting: undefined,
+          },
+        });
+      });
+    </script>
   </body>
 </html>

@@ -39,8 +39,9 @@ def get_daily_content(db: sqlite3.Cursor):
     response = db.fetchone()
     if response:
         post, is_true = response
+        is_true = is_true == 1
     else:
-        post, is_true = "Pedro was too lazy to post today", 1
+        post, is_true = "Pedro was too lazy to post today", True
     return post, is_true
 
 
