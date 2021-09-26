@@ -1,12 +1,17 @@
 body {
   margin: auto;
-  padding: 0px 1em;
-  width: 960px;
   font-family: sans-serif;
 }
-@media only screen and (max-width: 960px) {
+/* Desktop Styles */
+@media only screen and (max-width: 961px) {
   body {
     width: 100%;
+  }
+}
+/* app Styles */
+@media only screen and (min-width: 961px) {
+  body {
+    width: 960px;
   }
 }
 
@@ -24,6 +29,12 @@ main {
 footer {
   margin-left: 20px;
   margin-top: auto;
+}
+@media only screen and (max-width: 960px) {
+  footer {
+    text-align: center;
+    margin-left: unset;
+  }
 }
 
 span.button {
