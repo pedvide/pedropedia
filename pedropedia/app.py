@@ -4,12 +4,26 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import datetime
+import sqlite3
+import os
 
-from .database import get_db, sqlite3
+SQLALCHEMY_DATABASE_URL = os.environ.get("SQLALCHEMY_DATABASE_URL", "sql_app.db")
+
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="pedropedia/static"), name="static")
 templates = Jinja2Templates(directory="pedropedia/static")
+
+
+def get_db():
+    connection = sqlite3.connect(SQLALCHEMY_DATABASE_URL, check_same_thread=False)
+    try:
+        cursor = connection.cursor()
+        yield cursor
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()
 
 
 def add_some_content(db: sqlite3.Cursor):
