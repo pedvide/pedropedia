@@ -1,0 +1,29 @@
+version: "3.8"
+networks:
+  traefik:
+    external: true
+
+services:
+  pedropedia:
+    build:
+      context: ./pedropedia
+      dockerfile: docker/Dockerfile
+    image: pedropedia
+    container_name: pedropedia
+    environment:
+      - MAX_WORKERS=4
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/pedropedia
+    expose:
+      - "80"
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pedropedia.rule=Host(`pedropedia.com`)"
+      - "traefik.http.routers.pedropedia.entrypoints=web"
+      - "traefik.docker.network=traefik"
+    restart: unless-stopped
+
