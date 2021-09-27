@@ -1,9 +1,6 @@
 body {
   margin: auto;
-  padding: 0px 1em;
-
   font-family: sans-serif;
-  text-align: center;
 }
 /* Desktop Styles */
 @media only screen and (max-width: 961px) {
@@ -21,23 +18,24 @@ body {
 header {
   margin-top: 100px;
   margin-bottom: 50px;
+  text-align: center;
   font-family: "Linux Libertine", "Georgia", "Times", serif;
 }
 
-/* main {
+main {
+  text-align: center;
+}
 
-} */
-
-/* footer {
+footer {
   margin-left: 20px;
   margin-top: auto;
 }
-@media only screen and (max-width: 961px) {
+@media only screen and (max-width: 960px) {
   footer {
     text-align: center;
     margin-left: unset;
   }
-} */
+}
 
 span.button {
   background-color: #555555;
@@ -46,7 +44,7 @@ span.button {
   padding: 0.25em 1em;
   text-align: center;
   text-decoration: none;
-  /* display: inline-block; */
+  display: inline-block;
   font-size: 1.2em;
 }
 
@@ -66,31 +64,9 @@ span.button {
 div.button-bar {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
   margin-top: 5em;
 }
-/* app Styles */
-@media only screen and (max-width: 961px) {
-  div.button-bar {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-/* Desktop Styles */
-@media only screen and (min-width: 961px) {
-  div.button-bar {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-}
-
 div.button-holder {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   margin: 5px 15px;
-  transition: 0.3s;
-  border-radius: 5px; /* 5px rounded corners */
-}
-/* On mouse-over, add a deeper shadow */
-div.button-holder:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
