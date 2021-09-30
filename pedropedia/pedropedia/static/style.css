@@ -37,7 +37,7 @@ footer {
   }
 }
 
-span.button {
+button.button {
   background-color: #555555;
   border: none;
   color: white;

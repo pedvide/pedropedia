@@ -21,22 +21,20 @@
     </header>
     <main>
       <p>{{ content }}</p>
-      <h4>
-        <div class="button-bar">
-          <div
-            class="button-holder"
-            id="{% if isTrue %}right-answer{% else %}wrong-answer{% endif %}"
-          >
-            <span class="button" id="btn-true">True</span>
-          </div>
-          <div
-            class="button-holder"
-            id="{% if isTrue %}wrong-answer{% else %}right-answer{% endif %}"
-          >
-            <span class="button" id="btn-false">False</span>
-          </div>
+      <div class="button-bar">
+        <div
+          class="button-holder"
+          id="{% if isTrue %}right-answer{% else %}wrong-answer{% endif %}"
+        >
+          <button class="button" id="btn-true">True</button>
         </div>
-      </h4>
+        <div
+          class="button-holder"
+          id="{% if isTrue %}wrong-answer{% else %}right-answer{% endif %}"
+        >
+          <button class="button" id="btn-false">False</button>
+        </div>
+      </div>
     </main>
     <!-- <footer>Pedropedia: A truly useless project</footer> -->
 
