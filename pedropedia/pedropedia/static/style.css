@@ -1,6 +1,8 @@
 body {
+  box-sizing: content-box;
   margin: auto;
   font-family: sans-serif;
+  font-size: 18px;
 }
 /* Desktop Styles */
 @media only screen and (max-width: 961px) {
@@ -16,13 +18,15 @@ body {
 }
 
 header {
-  margin-top: 100px;
+  margin-top: 50px;
   margin-bottom: 50px;
   text-align: center;
   font-family: "Linux Libertine", "Georgia", "Times", serif;
 }
 
 main {
+  margin-left: 1em;
+  margin-right: 1em;
   text-align: center;
 }
 
@@ -64,7 +68,7 @@ button.button {
 div.button-bar {
   display: flex;
   justify-content: center;
-  margin-top: 5em;
+  margin-top: 2.5em;
 }
 div.button-holder {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
