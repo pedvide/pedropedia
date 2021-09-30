@@ -22,7 +22,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pedropedia.rule=Host(`pedvide.duckdns.org`, `pedropedia.com`)"
+      - "traefik.http.routers.pedropedia.rule=Host(`pedvide.duckdns.org`, `pedropedia.com`, `www.pedropedia.com`)"
       - "traefik.http.routers.pedropedia.entrypoints=web"
       - "traefik.docker.network=traefik"
     restart: unless-stopped
