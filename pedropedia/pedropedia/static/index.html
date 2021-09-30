@@ -74,7 +74,7 @@
             modules: [
               new party.ModuleBuilder()
                 .drive("size")
-                .by((t) => 1 + 0.3 * (Math.cos(t * 10) + 1))
+                .by((t) => 1 + 0.6 * (Math.cos(t * 10) + 1))
                 .build(),
               new party.ModuleBuilder()
                 .drive("rotation")
@@ -84,11 +84,11 @@
             ],
           },
           emissionOptions: {
-            rate: 0,
+            rate: 5,
             bursts: [{ time: 0, count: party.variation.skew(30, 10) }],
             sourceSampler: party.sources.dynamicSource(wrongButton),
-            angle: party.variation.range(-180, 0),
-            initialSpeed: 400,
+            angle: party.variation.range(-150, -30),
+            initialSpeed: 500,
             initialLifetime: party.variation.range(6, 8),
           },
           rendererOptions: {
