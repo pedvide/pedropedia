@@ -30,15 +30,22 @@ main {
   text-align: center;
 }
 
-footer {
-  margin-left: 20px;
-  margin-top: auto;
+#fact-block article {
+  border: 2px solid black;
 }
-@media only screen and (max-width: 960px) {
-  footer {
-    text-align: center;
-    margin-left: unset;
-  }
+.fact-container {
+  padding: 0 0.5em;
+  margin-top: -0.7em;
+  text-align: left;
+}
+.fact-title {
+  background: white none repeat scroll 0 0;
+  display: inline-block;
+  padding: 0 2px;
+  margin-left: 10%;
+}
+.fact-content {
+  text-align: center;
 }
 
 button.button {
@@ -74,3 +81,12 @@ div.button-holder {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   margin: 5px 15px;
 }
+
+footer {
+  margin-left: 1em;
+  text-align: left;
+  position: absolute;
+  bottom: 0;
+  font-size: 0.7em;
+}
+

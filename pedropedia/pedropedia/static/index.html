@@ -20,7 +20,20 @@
       <h1>Welcome to Pedropedia</h1>
     </header>
     <main>
-      <p>{{ content }}</p>
+      <article>
+      </article>
+      <section id="fact-block">
+        <article class="fact">
+          <div class="fact-container">
+            <div class="fact-title">
+              Fact of the day
+            </div>
+            <div class="fact-contents">
+              <p>{{ content }}</p>
+            </div>
+          </div>
+        </article>
+      </section>
       <div class="button-bar">
         <div
           class="button-holder"
@@ -36,7 +49,9 @@
         </div>
       </div>
     </main>
-    <!-- <footer>Pedropedia: A truly useless project</footer> -->
+    <footer>
+      <p>Pedropedia: The useless encyclopedia</p>
+    </footer>
 
     <script>
       document
