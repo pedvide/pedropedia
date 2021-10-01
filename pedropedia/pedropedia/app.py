@@ -26,7 +26,7 @@ def get_db():
         connection.close()
 
 
-def add_some_content(db: sqlite3.Cursor):
+def create_tables(db: sqlite3.Cursor):
     db.execute(
         """CREATE TABLE IF NOT EXISTS facts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,7 +37,6 @@ def add_some_content(db: sqlite3.Cursor):
         num_false INTEGER
         )"""
     )
-    # db.execute("INSERT INTO facts VALUES ('2021-09-23', 'First fact', 1)")
 
 
 def get_daily_content(db: sqlite3.Cursor):
@@ -54,7 +53,7 @@ def get_daily_content(db: sqlite3.Cursor):
 
 @app.get("/", response_class=HTMLResponse)
 async def build_page(request: Request, db: sqlite3.Cursor = Depends(get_db)):
-    add_some_content(db)
+    create_tables(db)
     content, is_true = get_daily_content(db)
     return templates.TemplateResponse(
         "index.html", {"request": request, "content": content, "isTrue": is_true}
