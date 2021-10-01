@@ -27,6 +27,9 @@ services:
       - "traefik.http.routers.pedropedia-secure.rule=Host(`pedvide.duckdns.org`, `www.pedropedia.com`)"
       - "traefik.http.routers.pedropedia-secure.entrypoints=websecure"
       - "traefik.http.routers.pedropedia-secure.tls.certresolver=lets-encr"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+      - "traefik.http.routers.pedropedia.middlewares=redirect-to-https"
       - "traefik.docker.network=traefik"
     restart: unless-stopped
 
