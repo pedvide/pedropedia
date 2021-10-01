@@ -10,7 +10,7 @@ import os
 SQLALCHEMY_DATABASE_URL = os.environ.get("SQLALCHEMY_DATABASE_URL", "sql_app.db")
 
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory="pedropedia/static"), name="static")
 templates = Jinja2Templates(directory="pedropedia/static")
 
