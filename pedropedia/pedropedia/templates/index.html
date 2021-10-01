@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="static/style.css"
-    />
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>P</text></svg>"
     />
+    <script
+      src="https://cdn.jsdelivr.net/npm/party-js@latest/bundle/party.min.js"
+      defer
+    ></script>
     <script src="scripts/main.js" defer></script>
     <title>Pedropedia</title>
   </head>
@@ -20,34 +20,32 @@
       <h1>Welcome to Pedropedia</h1>
     </header>
     <main>
-      <article>
-      </article>
       <section id="fact-block">
         <article class="fact">
           <div class="fact-container">
-            <div class="fact-title">
-              Fact of the day
-            </div>
+            <div class="fact-title">Fact of the day</div>
             <div class="fact-contents">
               <p>{{ content }}</p>
             </div>
           </div>
         </article>
       </section>
-      <div class="button-bar">
-        <div
-          class="button-holder"
-          id="{% if isTrue %}right-answer{% else %}wrong-answer{% endif %}"
-        >
-          <button class="button" id="btn-true">True</button>
+      <section>
+        <div class="button-bar">
+          <div
+            class="button-holder"
+            id="{% if isTrue %}right-answer{% else %}wrong-answer{% endif %}"
+          >
+            <button class="button" id="btn-true">True</button>
+          </div>
+          <div
+            class="button-holder"
+            id="{% if isTrue %}wrong-answer{% else %}right-answer{% endif %}"
+          >
+            <button class="button" id="btn-false">False</button>
+          </div>
         </div>
-        <div
-          class="button-holder"
-          id="{% if isTrue %}wrong-answer{% else %}right-answer{% endif %}"
-        >
-          <button class="button" id="btn-false">False</button>
-        </div>
-      </div>
+      </section>
     </main>
     <footer>
       <p>Pedropedia: The useless encyclopedia</p>

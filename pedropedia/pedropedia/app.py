@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Depends
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -16,9 +16,11 @@ app.mount("/static", StaticFiles(directory="pedropedia/static"), name="static")
 app.mount("/scripts", StaticFiles(directory="pedropedia/scripts"), name="scripts")
 templates = Jinja2Templates(directory="pedropedia/templates")
 
+
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+
 
 def get_db():
     connection = sqlite3.connect(SQLALCHEMY_DATABASE_URL, check_same_thread=False)
