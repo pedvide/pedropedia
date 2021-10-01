@@ -4,6 +4,10 @@ ENV MODULE_NAME="pedropedia.app"
 ENV VARIABLE_NAME="app"
 ENV PORT 80
 
+RUN apt-get update && apt-get install tzdata
+ENV TZ=Europe/Amsterdam
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 COPY ./requirements.txt ./
 RUN python -m pip install -r requirements.txt
 
