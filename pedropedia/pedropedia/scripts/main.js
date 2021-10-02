@@ -1,14 +1,10 @@
-function animateRightAnswerButton(id) {
-  document.getElementById(id).addEventListener("click", function (e) {
-    party.confetti(this, {
-      count: party.variation.range(20, 40),
-    });
+function confetti(button) {
+  party.confetti(button, {
+    count: party.variation.range(20, 40),
   });
 }
 
-function animateWrongAnswerButton(id) {
-  const wrongButton = document.getElementById(id);
-
+function getWrongAnswerSVG() {
   const wrongAnswerEmoji = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "text"
@@ -25,37 +21,39 @@ function animateWrongAnswerButton(id) {
   wrongAnswerSVG.setAttribute("height", "20");
   wrongAnswerSVG.setAttribute("width", "20");
   wrongAnswerSVG.appendChild(wrongAnswerEmoji);
+  return wrongAnswerSVG;
+}
 
-  wrongButton.addEventListener("click", function (e) {
-    party.scene.current.createEmitter({
-      emitterOptions: {
-        loops: 1,
-        useGravity: true,
-        modules: [
-          new party.ModuleBuilder()
-            .drive("size")
-            .by((t) => 1 + 0.6 * (Math.cos(t * 10) + 1))
-            .build(),
-          new party.ModuleBuilder()
-            .drive("rotation")
-            .by((t) => new party.Vector(0, 100, 100).scale(t))
-            .relative()
-            .build(),
-        ],
-      },
-      emissionOptions: {
-        rate: 5,
-        bursts: [{ time: 0, count: party.variation.skew(30, 10) }],
-        sourceSampler: party.sources.dynamicSource(wrongButton),
-        angle: party.variation.range(-150, -30),
-        initialSpeed: 500,
-        initialLifetime: party.variation.range(6, 8),
-      },
-      rendererOptions: {
-        shapeFactory: wrongAnswerSVG,
-        applyLighting: undefined,
-      },
-    });
+function poopEmoji(button) {
+  wrongAnswerSVG = getWrongAnswerSVG();
+  party.scene.current.createEmitter({
+    emitterOptions: {
+      loops: 1,
+      useGravity: true,
+      modules: [
+        new party.ModuleBuilder()
+          .drive("size")
+          .by((t) => 1 + 0.6 * (Math.cos(t * 10) + 1))
+          .build(),
+        new party.ModuleBuilder()
+          .drive("rotation")
+          .by((t) => new party.Vector(0, 100, 100).scale(t))
+          .relative()
+          .build(),
+      ],
+    },
+    emissionOptions: {
+      rate: 2,
+      bursts: [{ time: 0, count: party.variation.skew(30, 10) }],
+      sourceSampler: party.sources.dynamicSource(button),
+      angle: party.variation.range(-150, -30),
+      initialSpeed: party.variation.range(300, 800),
+      initialLifetime: party.variation.range(1, 8),
+    },
+    rendererOptions: {
+      shapeFactory: wrongAnswerSVG,
+      applyLighting: undefined,
+    },
   });
 }
 
@@ -66,15 +64,19 @@ function getDateContent(date) {
       const post = JSON.parse(this.responseText);
       document.getElementById("fact-date").innerHTML = post.date;
       document.getElementById("fact-contents").innerHTML = post.content;
-      if (post.isTrue) {
-        id_right = "btn-holder-true";
-        id_wrong = "btn-holder-false";
-      } else {
-        id_right = "btn-holder-false";
-        id_wrong = "btn-holder-true";
-      }
-      animateRightAnswerButton(id_right);
-      animateWrongAnswerButton(id_wrong);
+      id_right = post.is_true ? "btn-holder-true" : "btn-holder-false";
+      const rightButton = document.getElementById(id_right);
+
+      id_wrong = post.is_true ? "btn-holder-false" : "btn-holder-true";
+      const wrongButton = document.getElementById(id_wrong);
+
+      rightButton.removeEventListener("click", confetti);
+      rightButton.removeEventListener("click", poopEmoji);
+      rightButton.addEventListener("click", confetti);
+
+      wrongButton.removeEventListener("click", confetti);
+      wrongButton.removeEventListener("click", poopEmoji);
+      wrongButton.addEventListener("click", poopEmoji);
     }
   };
   xhttp.open("GET", `/date/${date}`, true);
