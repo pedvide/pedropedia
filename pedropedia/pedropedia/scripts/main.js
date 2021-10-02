@@ -4,7 +4,7 @@ function confetti(button) {
   });
 }
 
-function getWrongAnswerSVG() {
+function buildWrongAnswerSVG() {
   const wrongAnswerEmoji = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "text"
@@ -25,7 +25,7 @@ function getWrongAnswerSVG() {
 }
 
 function poopEmoji(button) {
-  wrongAnswerSVG = getWrongAnswerSVG();
+  wrongAnswerSVG = buildWrongAnswerSVG();
   party.scene.current.createEmitter({
     emitterOptions: {
       loops: 1,
