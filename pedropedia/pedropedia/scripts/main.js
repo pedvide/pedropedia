@@ -79,9 +79,11 @@ function getDateContent(date) {
       wrongButton.addEventListener("click", poopEmoji);
     }
   };
-  xhttp.open("GET", `/date/${date}`, true);
+
+  // api/date gets todays data
+  path = typeof date === "undefined" ? "api/date/" : `api/date/${date}`;
+  xhttp.open("GET", path, true);
   xhttp.send();
 }
 
-const today = new Date().toISOString().slice(0, 10);
-getDateContent(today);
+getDateContent();
