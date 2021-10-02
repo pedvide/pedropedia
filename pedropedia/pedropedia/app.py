@@ -86,7 +86,10 @@ async def get_date_content(
 async def page_date(
     request: Request, date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
 ):
-    date = date or datetime.date.today()
+    today = datetime.date.today()
+    date = date or today
+    if date > today:
+        raise HTTPException(status_code=404, detail="Date in the future")
     post = get_content(db, date)
     content, is_true = post.content, post.is_true
     return templates.TemplateResponse(

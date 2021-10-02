@@ -86,4 +86,5 @@ function getDateContent(date) {
   xhttp.send();
 }
 
-getDateContent();
+date = document.getElementById("fact-date").innerHTML;
+getDateContent(date);
