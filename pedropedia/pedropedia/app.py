@@ -69,22 +69,26 @@ def get_content(db: sqlite3.Cursor, date: datetime.date) -> Post:
     return Post(date=date, content=post, is_true=is_true)
 
 
-@app.get("/date/{date}", response_model=Post)
+@app.get("api/date/{date}", response_model=Post)
 async def get_date_content(
-    date: datetime.date, db: sqlite3.Cursor = Depends(get_db)
+    date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
 ) -> Post:
     today = datetime.date.today()
-    if date > today:
-        raise HTTPException(status_code=404, detail="Item not found")
+    if not date:
+        date = today
+    elif date > today:
+        raise HTTPException(status_code=404, detail="Date in the future")
     return get_content(db, date)
 
 
-@app.get("/", response_class=HTMLResponse)
-async def build_page(request: Request, db: sqlite3.Cursor = Depends(get_db)):
-    today = datetime.date.today()
-    post = get_content(db, today)
+@app.get("/{date}", response_class=HTMLResponse)
+async def page_date(
+    request: Request, date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
+):
+    date = date or datetime.date.today()
+    post = get_content(db, date)
     content, is_true = post.content, post.is_true
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "date": today, "content": content, "isTrue": is_true},
+        {"request": request, "date": date, "content": content, "isTrue": is_true},
     )
