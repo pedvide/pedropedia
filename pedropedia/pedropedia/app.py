@@ -37,7 +37,7 @@ def get_db():
         connection.close()
 
 
-def create_tables(db: sqlite3.Cursor):
+def create_tables(db: sqlite3.Cursor) -> None:
     db.execute(
         """CREATE TABLE IF NOT EXISTS facts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,7 +58,7 @@ class Post(BaseModel):
     num_false: OptionalInt = None
 
 
-def get_content(db: sqlite3.Cursor, date: datetime.date):
+def get_content(db: sqlite3.Cursor, date: datetime.date) -> Post:
     db.execute("SELECT post, is_true FROM facts where date=:date", {"date": date})
     response = db.fetchone()
     if response:
