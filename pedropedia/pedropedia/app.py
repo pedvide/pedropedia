@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -73,6 +73,9 @@ def get_content(db: sqlite3.Cursor, date: datetime.date):
 async def get_date_content(
     date: datetime.date, db: sqlite3.Cursor = Depends(get_db)
 ) -> Post:
+    today = datetime.date.today()
+    if date > today:
+        raise HTTPException(status_code=404, detail="Item not found")
     return get_content(db, date)
 
 
