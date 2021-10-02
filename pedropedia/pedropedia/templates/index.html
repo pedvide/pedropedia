@@ -28,9 +28,11 @@
       <section id="fact-block">
         <article class="fact">
           <div class="fact-container">
-            <div class="fact-title">Fact of the day ({{ date }})</div>
+            <div class="fact-title">
+              Fact of the day (<time id="fact-date">{{ date }}</time>)
+            </div>
             <div class="fact-contents">
-              <p>{{ content }}</p>
+              <p id="fact-contents">{{ content }}</p>
             </div>
           </div>
         </article>
