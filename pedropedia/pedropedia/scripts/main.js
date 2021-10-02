@@ -81,7 +81,7 @@ function getDateContent(date) {
   };
 
   // api/date gets todays data
-  path = typeof date === "undefined" ? "api/date/" : `api/date/${date}`;
+  path = typeof date === "undefined" ? "api/date" : `api/date/${date}`;
   xhttp.open("GET", path, true);
   xhttp.send();
 }

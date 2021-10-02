@@ -69,15 +69,14 @@ def get_content(db: sqlite3.Cursor, date: datetime.date) -> Post:
     return Post(date=date, content=post, is_true=is_true)
 
 
-@app.get("api/date/{date}", response_model=Post)
-@app.get("api/date/}", response_model=Post)
+@app.get("/api/date/{date}", response_model=Post)
+@app.get("/api/date", response_model=Post)
 async def get_date_content(
     date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
 ) -> Post:
     today = datetime.date.today()
-    if not date:
-        date = today
-    elif date > today:
+    date = date or today
+    if date > today:
         raise HTTPException(status_code=404, detail="Date in the future")
     return get_content(db, date)
 
