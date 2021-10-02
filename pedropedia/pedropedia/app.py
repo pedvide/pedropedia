@@ -70,6 +70,7 @@ def get_content(db: sqlite3.Cursor, date: datetime.date) -> Post:
 
 
 @app.get("api/date/{date}", response_model=Post)
+@app.get("api/date/}", response_model=Post)
 async def get_date_content(
     date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
 ) -> Post:
@@ -82,6 +83,7 @@ async def get_date_content(
 
 
 @app.get("/{date}", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 async def page_date(
     request: Request, date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
 ):
