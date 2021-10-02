@@ -17,7 +17,7 @@
       src="https://cdn.jsdelivr.net/npm/party-js@latest/bundle/party.min.js"
       defer
     ></script>
-    <script type="module" src="scripts/main.js" defer></script>
+    <script src="scripts/main.js"></script>
     <title>Pedropedia</title>
   </head>
   <body>
@@ -29,26 +29,20 @@
         <article class="fact">
           <div class="fact-container">
             <div class="fact-title">
-              Fact of the day (<time id="fact-date">{{ date }}</time>)
+              Fact of the day (<time id="fact-date">loading...</time>)
             </div>
             <div class="fact-contents">
-              <p id="fact-contents">{{ content }}</p>
+              <p id="fact-contents">Loading...</p>
             </div>
           </div>
         </article>
       </section>
       <section>
         <div class="button-bar">
-          <div
-            class="button-holder"
-            id="{% if isTrue %}right-answer{% else %}wrong-answer{% endif %}"
-          >
+          <div class="button-holder" id="btn-holder-true">
             <button class="button" id="btn-true">True</button>
           </div>
-          <div
-            class="button-holder"
-            id="{% if isTrue %}wrong-answer{% else %}right-answer{% endif %}"
-          >
+          <div class="button-holder" id="btn-holder-false">
             <button class="button" id="btn-false">False</button>
           </div>
         </div>
