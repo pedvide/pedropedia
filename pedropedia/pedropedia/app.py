@@ -13,11 +13,12 @@ import os
 
 SQLALCHEMY_DATABASE_URL = os.environ.get("SQLALCHEMY_DATABASE_URL", "sql_app.db")
 
-
 app = FastAPI(docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory="pedropedia/static"), name="static")
 app.mount("/scripts", StaticFiles(directory="pedropedia/scripts"), name="scripts")
 templates = Jinja2Templates(directory="pedropedia/templates")
+
+FIRST_DATE = "2021-09-27"
 
 
 @app.exception_handler(StarletteHTTPException)
@@ -76,7 +77,7 @@ async def get_date_content(
 ) -> Post:
     today = datetime.date.today()
     date = date or today
-    if date > today:
+    if not (FIRST_DATE <= date <= today):
         raise HTTPException(status_code=404, detail="Date in the future")
     return get_content(db, date)
 
@@ -88,7 +89,7 @@ async def page_date(
 ):
     today = datetime.date.today()
     date = date or today
-    if date > today:
+    if not (FIRST_DATE <= date <= today):
         raise HTTPException(status_code=404, detail="Date in the future")
     post = get_content(db, date)
     content, is_true = post.content, post.is_true
