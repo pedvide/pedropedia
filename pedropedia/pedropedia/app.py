@@ -4,6 +4,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from pydantic import BaseModel
+from pydantic.types import OptionalInt
+
 import datetime
 import sqlite3
 import os
@@ -26,6 +29,7 @@ def get_db():
     connection = sqlite3.connect(SQLALCHEMY_DATABASE_URL, check_same_thread=False)
     try:
         cursor = connection.cursor()
+        create_tables(cursor)
         yield cursor
         connection.commit()
     finally:
@@ -46,9 +50,17 @@ def create_tables(db: sqlite3.Cursor):
     )
 
 
-def get_daily_content(db: sqlite3.Cursor):
-    today = datetime.date.today()
-    db.execute("SELECT post, is_true FROM facts where date=:today", {"today": today})
+class Post(BaseModel):
+    date: datetime.date
+    content: str
+    price: float
+    is_true: bool
+    num_true: OptionalInt = None
+    num_false: OptionalInt = None
+
+
+def get_content(db: sqlite3.Cursor, date: datetime.date):
+    db.execute("SELECT post, is_true FROM facts where date=:date", {"date": date})
     response = db.fetchone()
     if response:
         post, is_true = response
@@ -58,10 +70,18 @@ def get_daily_content(db: sqlite3.Cursor):
     return post, is_true
 
 
+@app.get("/date/{date}", response_model=Post)
+async def get_date_content(
+    date: datetime.date, db: sqlite3.Cursor = Depends(get_db)
+) -> Post:
+    return get_content(db, date)
+
+
 @app.get("/", response_class=HTMLResponse)
 async def build_page(request: Request, db: sqlite3.Cursor = Depends(get_db)):
-    create_tables(db)
-    content, is_true = get_daily_content(db)
+    today = datetime.date.today()
+    content, is_true = get_content(db, today)
     return templates.TemplateResponse(
-        "index.html", {"request": request, "content": content, "isTrue": is_true}
+        "index.html",
+        {"request": request, "date": today, "content": content, "isTrue": is_true},
     )
