@@ -53,7 +53,6 @@ def create_tables(db: sqlite3.Cursor):
 class Post(BaseModel):
     date: datetime.date
     content: str
-    price: float
     is_true: bool
     num_true: OptionalInt = None
     num_false: OptionalInt = None
@@ -67,7 +66,7 @@ def get_content(db: sqlite3.Cursor, date: datetime.date):
         is_true = is_true == 1
     else:
         post, is_true = "Pedro was too lazy to post today", True
-    return post, is_true
+    return Post(date=date, content=post, is_true=is_true)
 
 
 @app.get("/date/{date}", response_model=Post)
@@ -80,7 +79,8 @@ async def get_date_content(
 @app.get("/", response_class=HTMLResponse)
 async def build_page(request: Request, db: sqlite3.Cursor = Depends(get_db)):
     today = datetime.date.today()
-    content, is_true = get_content(db, today)
+    post = get_content(db, today)
+    content, is_true = post.content, post.is_true
     return templates.TemplateResponse(
         "index.html",
         {"request": request, "date": today, "content": content, "isTrue": is_true},
