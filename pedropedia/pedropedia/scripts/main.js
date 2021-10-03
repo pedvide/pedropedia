@@ -79,6 +79,25 @@ function getDateContent(date) {
       wrongButton.removeEventListener("click", confetti);
       wrongButton.removeEventListener("click", poopEmoji);
       wrongButton.addEventListener("click", poopEmoji);
+
+      const date = post.date;
+      const today = new Date(date);
+      const prev_date = new Date(new Date(today).setDate(today.getDate() - 1))
+        .toISOString()
+        .slice(0, 10);
+      const next_date = new Date(new Date(today).setDate(today.getDate() + 1))
+        .toISOString()
+        .slice(0, 10);
+
+      document.getElementById("btn-prev").onclick = function (e) {
+        getDateContent(prev_date);
+      };
+      document.getElementById("btn-next").onclick = function (e) {
+        getDateContent(next_date);
+      };
+      document.getElementById("btn-last").onclick = function (e) {
+        getDateContent();
+      };
     }
   };
 
@@ -90,3 +109,4 @@ function getDateContent(date) {
 
 date = document.getElementById("fact-date").innerHTML;
 getDateContent(date);
+
