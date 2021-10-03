@@ -1,4 +1,5 @@
-function confetti(button) {
+function confetti(event) {
+  const button = event.target;
   party.confetti(button, {
     count: party.variation.range(20, 40),
   });
@@ -24,7 +25,8 @@ function buildWrongAnswerSVG() {
   return wrongAnswerSVG;
 }
 
-function poopEmoji(button) {
+function poopEmoji(event) {
+  const button = event.target;
   wrongAnswerSVG = buildWrongAnswerSVG();
   party.scene.current.createEmitter({
     emitterOptions: {
