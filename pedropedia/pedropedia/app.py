@@ -57,6 +57,8 @@ class Post(BaseModel):
     is_true: bool
     num_true: OptionalInt = None
     num_false: OptionalInt = None
+    last_date: bool = False
+    first_date: bool = False
 
 
 def get_content(db: sqlite3.Cursor, date: datetime.date) -> Post:
@@ -67,7 +69,15 @@ def get_content(db: sqlite3.Cursor, date: datetime.date) -> Post:
         is_true = is_true == 1
     else:
         post, is_true = "Pedro was too lazy to post today", True
-    return Post(date=date, content=post, is_true=is_true)
+    last_date = date == datetime.date.today()
+    first_date = date == FIRST_DATE
+    return Post(
+        date=date,
+        content=post,
+        is_true=is_true,
+        last_date=last_date,
+        first_date=first_date,
+    )
 
 
 @app.get("/api/date/{date}", response_model=Post)
@@ -95,5 +105,12 @@ async def page_date(
     content, is_true = post.content, post.is_true
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "date": date, "content": content, "isTrue": is_true},
+        {
+            "request": request,
+            "date": date,
+            "content": content,
+            "isTrue": is_true,
+            "lastDate": post.last_date,
+            "firstDate": post.first_date,
+        },
     )
