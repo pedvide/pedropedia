@@ -127,6 +127,8 @@ function getDateContent(date) {
   xhttp.send();
 }
 
-date = document.getElementById("fact-date").innerHTML;
-getDateContent(date);
+document.addEventListener("DOMContentLoaded", function(){
+  date = document.getElementById("fact-date").innerHTML;
+  getDateContent(date);
+});
 
