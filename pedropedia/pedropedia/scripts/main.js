@@ -66,10 +66,10 @@ function getDateContent(date) {
       const post = JSON.parse(this.responseText);
       document.getElementById("fact-date").innerHTML = post.date;
       document.getElementById("fact-contents").innerHTML = post.content;
-      id_right = post.is_true ? "btn-holder-true" : "btn-holder-false";
+      id_right = post.is_true ? "btn-true" : "btn-false";
       const rightButton = document.getElementById(id_right);
 
-      id_wrong = post.is_true ? "btn-holder-false" : "btn-holder-true";
+      id_wrong = post.is_true ? "btn-false" : "btn-true";
       const wrongButton = document.getElementById(id_wrong);
 
       rightButton.removeEventListener("click", confetti);
@@ -82,22 +82,42 @@ function getDateContent(date) {
 
       const date = post.date;
       const today = new Date(date);
-      const prev_date = new Date(new Date(today).setDate(today.getDate() - 1))
-        .toISOString()
-        .slice(0, 10);
-      const next_date = new Date(new Date(today).setDate(today.getDate() + 1))
-        .toISOString()
-        .slice(0, 10);
+      prevButton = document.getElementById("btn-prev")
+      nextButton = document.getElementById("btn-next")
+      lastButton = document.getElementById("btn-last")
 
-      document.getElementById("btn-prev").onclick = function (e) {
-        getDateContent(prev_date);
-      };
-      document.getElementById("btn-next").onclick = function (e) {
-        getDateContent(next_date);
-      };
-      document.getElementById("btn-last").onclick = function (e) {
-        getDateContent();
-      };
+      if (post.first_date) {
+        prevButton.className = "button-inactive"
+        prevButton.onclick = null
+      } else {
+        prevButton.className = "button-active"
+        prevButton.onclick = null
+        const prev_date = new Date(new Date(today).setDate(today.getDate() - 1))
+          .toISOString()
+          .slice(0, 10);
+        prevButton.onclick = function (e) {
+          getDateContent(prev_date);
+        };
+      }
+
+      if (post.last_date) {
+        nextButton.className = "button-inactive"
+        lastButton.className = "button-inactive"
+        nextButton.onclick = null
+        lastButton.onclick = null
+      } else {
+        nextButton.className = "button-active"
+        lastButton.className = "button-active"
+        const next_date = new Date(new Date(today).setDate(today.getDate() + 1))
+          .toISOString()
+          .slice(0, 10);
+        nextButton.onclick = function (e) {
+          getDateContent(next_date);
+        };
+        lastButton.onclick = function (e) {
+          getDateContent();
+        };
+      }
     }
   };
 

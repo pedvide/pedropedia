@@ -39,11 +39,11 @@
       </section>
       <section>
         <div class="button-bar">
-          <div class="button-holder" id="btn-holder-true">
-            <button class="button" id="btn-true">True</button>
+          <div class="button-holder">
+            <button class="button-active" id="btn-true">True</button>
           </div>
-          <div class="button-holder" id="btn-holder-false">
-            <button class="button" id="btn-false">False</button>
+          <div class="button-holder">
+            <button class="button-active" id="btn-false">False</button>
           </div>
         </div>
       </section>
@@ -51,19 +51,19 @@
         <nav class="nav-dates">
           <ul>
             <li>
-                <div class="button-holder" id="btn-prev">
-                    <button class="button">&lt; Previous</button>
-                </div>
+              <div class="button-holder">
+                  <button class={{ "button-inactive" if firstDate else "button-active"}} id="btn-prev">&lt; Previous</button>
+              </div>
             </li>
             <li>
-                <div class="button-holder" id="btn-next">
-                    <button class="button">Next &gt;</button>
-                </div>
+              <div class="button-holder">
+                <button class={{ "button-inactive" if lastDate else "button-active"}} id="btn-next">Next &gt;</button>
+              </div>
             </li>
             <li>
-                <div class="button-holder" id="btn-last">
-                  <button class="button">Last &gt;&gt;</button>
-                </div>
+              <div class="button-holder">
+                <button class={{ "button-inactive" if lastDate else "button-active"}} id="btn-last">Last &gt;&gt;</button>
+              </div>
             </li>
           </ul>
         </nav>
