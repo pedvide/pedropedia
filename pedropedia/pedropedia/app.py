@@ -19,8 +19,6 @@ app.mount("/static", StaticFiles(directory="pedropedia/static"), name="static")
 app.mount("/scripts", StaticFiles(directory="pedropedia/scripts"), name="scripts")
 templates = Jinja2Templates(directory="pedropedia/templates")
 
-FIRST_DATE = datetime.date(2021, 9, 27)
-
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
