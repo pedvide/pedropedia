@@ -7,7 +7,10 @@ function rightAnswer(event) {
 }
 
 function buildWrongAnswerSVG() {
-  const wrongAnswerEmoji = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  const wrongAnswerEmoji = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "text"
+  );
   wrongAnswerEmoji.setAttribute("x", "0");
   wrongAnswerEmoji.setAttribute("y", "1em");
   wrongAnswerEmoji.setAttribute("font-size", "16");
@@ -17,7 +20,10 @@ function buildWrongAnswerSVG() {
   } else {
     wrongAnswerEmoji.textContent = "😢";
   }
-  const wrongAnswerSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const wrongAnswerSVG = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
   wrongAnswerSVG.setAttribute("height", "20");
   wrongAnswerSVG.setAttribute("width", "20");
   wrongAnswerSVG.appendChild(wrongAnswerEmoji);
@@ -60,13 +66,14 @@ function wrongAnswer(event) {
   });
 }
 
-function getDateContent(date) {
+function getIdContent(id) {
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       const post = JSON.parse(this.responseText);
       document.getElementById("fact-date").innerHTML = post.date;
       document.getElementById("fact-contents").innerHTML = post.content;
+      document.getElementById("fact-id").innerHTML = post.id;
       id_right = post.is_true ? "btn-true" : "btn-false";
       const rightButton = document.getElementById(id_right);
 
@@ -81,25 +88,23 @@ function getDateContent(date) {
       wrongButton.removeEventListener("click", wrongAnswer);
       wrongButton.addEventListener("click", wrongAnswer);
 
-      const date = post.date;
-      const today = new Date(date);
+      const id = post.id;
       prevButton = document.getElementById("btn-prev");
       nextButton = document.getElementById("btn-next");
       lastButton = document.getElementById("btn-last");
 
-      if (post.first_date) {
+      if (post.first_id) {
         prevButton.className = "button-inactive";
         prevButton.onclick = null;
       } else {
         prevButton.className = "button-active";
         prevButton.onclick = null;
-        const prev_date = new Date(new Date(today).setDate(today.getDate() - 1)).toISOString().slice(0, 10);
         prevButton.onclick = function (e) {
-          getDateContent(prev_date);
+          getIdContent(id - 1);
         };
       }
 
-      if (post.last_date) {
+      if (post.last_id) {
         nextButton.className = "button-inactive";
         lastButton.className = "button-inactive";
         nextButton.onclick = null;
@@ -107,24 +112,23 @@ function getDateContent(date) {
       } else {
         nextButton.className = "button-active";
         lastButton.className = "button-active";
-        const next_date = new Date(new Date(today).setDate(today.getDate() + 1)).toISOString().slice(0, 10);
         nextButton.onclick = function (e) {
-          getDateContent(next_date);
+          getIdContent(id + 1);
         };
         lastButton.onclick = function (e) {
-          getDateContent();
+          getIdContent();
         };
       }
     }
   };
 
   // api/date gets todays data
-  path = typeof date === "undefined" ? "api/date" : `api/date/${date}`;
+  path = typeof id === "undefined" ? "api/id" : `api/id/${id}`;
   xhttp.open("GET", path, true);
   xhttp.send();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  date = document.getElementById("fact-date").innerHTML;
-  getDateContent(date);
+  const id = document.getElementById("fact-id").innerHTML;
+  getIdContent(id);
 });
