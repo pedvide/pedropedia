@@ -62,7 +62,9 @@ class Post(BaseModel):
 
 
 def get_max_id(db: sqlite3.Cursor) -> int:
-    db.execute("select max(id) from facts")
+    db.execute(
+        "select max(post_id) from (select ROW_NUMBER() OVER(ORDER BY date) AS post_id from facts)"
+    )
     response = db.fetchone()
     if response:
         return response[0]
@@ -71,7 +73,12 @@ def get_max_id(db: sqlite3.Cursor) -> int:
 
 
 def get_content_by_id(db: sqlite3.Cursor, id: int) -> Optional[Post]:
-    db.execute("SELECT date, post, is_true FROM facts WHERE id=:id", {"id": id})
+    db.execute(
+        "SELECT date, post, is_true "
+        "FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY date) AS post_id FROM facts) "
+        "WHERE post_id=:id",
+        {"post_id": id},
+    )
     response = db.fetchone()
     if response:
         date, post, is_true = response
