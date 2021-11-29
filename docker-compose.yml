@@ -1,4 +1,4 @@
-version: "3.8"
+version: "2.4"
 networks:
   traefik:
     external: true
@@ -31,5 +31,10 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
       - "traefik.http.routers.pedropedia.middlewares=redirect-to-https"
       - "traefik.docker.network=traefik"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 500M
     restart: unless-stopped
 
