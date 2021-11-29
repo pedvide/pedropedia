@@ -76,7 +76,7 @@ def get_content_by_id(db: sqlite3.Cursor, id: int) -> Optional[Post]:
     db.execute(
         "SELECT date, post, is_true "
         "FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY date) AS post_id FROM facts) "
-        "WHERE post_id=:id",
+        "WHERE post_id=:post_id",
         {"post_id": id},
     )
     response = db.fetchone()
