@@ -65,7 +65,7 @@ def get_max_id(db: sqlite3.Cursor) -> int:
     db.execute("select max(id) from facts")
     response = db.fetchone()
     if response:
-        return response
+        return response[0]
     else:
         raise Exception("Bad connection to db.")
 
