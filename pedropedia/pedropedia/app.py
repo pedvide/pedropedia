@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from pydantic import BaseModel
@@ -23,6 +24,11 @@ templates = Jinja2Templates(directory="pedropedia/templates")
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return templates.TemplateResponse("404.html", {"request": request}, status_code=400)
 
 
 def get_db():
