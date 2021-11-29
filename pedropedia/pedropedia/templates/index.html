@@ -24,8 +24,8 @@
         <article class="fact">
           <div class="fact-container">
             <div class="fact-title">
-              Fact of the day (<time id="fact-date">{{ date }}</time
-              >)
+              Fact #<span id="fact-id">{{ id }}</span> 
+              (<time id="fact-date">{{ date }}</time>)
             </div>
             <div class="fact-contents">
               <p id="fact-contents">{{ content }}</p>
@@ -48,17 +48,17 @@
           <ul>
             <li>
               <div class="button-holder">
-                  <button class={{ "button-inactive" if firstDate else "button-active"}} id="btn-prev">&lt; Previous</button>
+                  <button class={{ "button-inactive" if firstId else "button-active"}} id="btn-prev">&lt; Previous</button>
               </div>
             </li>
             <li>
               <div class="button-holder">
-                <button class={{ "button-inactive" if lastDate else "button-active"}} id="btn-next">Next &gt;</button>
+                <button class={{ "button-inactive" if lastId else "button-active"}} id="btn-next">Next &gt;</button>
               </div>
             </li>
             <li>
               <div class="button-holder">
-                <button class={{ "button-inactive" if lastDate else "button-active"}} id="btn-last">Last &gt;&gt;</button>
+                <button class={{ "button-inactive" if lastId else "button-active"}} id="btn-last">Last &gt;&gt;</button>
               </div>
             </li>
           </ul>

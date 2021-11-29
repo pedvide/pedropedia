@@ -2,10 +2,12 @@ from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from pydantic import BaseModel
-from pydantic.types import OptionalInt
+
+from typing import Optional
 
 import datetime
 import sqlite3
@@ -18,12 +20,15 @@ app.mount("/static", StaticFiles(directory="pedropedia/static"), name="static")
 app.mount("/scripts", StaticFiles(directory="pedropedia/scripts"), name="scripts")
 templates = Jinja2Templates(directory="pedropedia/templates")
 
-FIRST_DATE = datetime.date(2021, 9, 27)
-
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return templates.TemplateResponse("404.html", {"request": request}, status_code=400)
 
 
 def get_db():
@@ -52,65 +57,81 @@ def create_tables(db: sqlite3.Cursor) -> None:
 
 
 class Post(BaseModel):
+    id: int
     date: datetime.date
     content: str
     is_true: bool
-    num_true: OptionalInt = None
-    num_false: OptionalInt = None
-    last_date: bool = False
-    first_date: bool = False
+    last_id: bool = False
+    first_id: bool = False
 
 
-def get_content(db: sqlite3.Cursor, date: datetime.date) -> Post:
-    db.execute("SELECT post, is_true FROM facts where date=:date", {"date": date})
+def get_max_id(db: sqlite3.Cursor) -> int:
+    db.execute(
+        "select max(post_id) from (select ROW_NUMBER() OVER(ORDER BY date) AS post_id from facts)"
+    )
     response = db.fetchone()
     if response:
-        post, is_true = response
+        return response[0]
+    else:
+        raise Exception("Bad connection to db.")
+
+
+def get_content_by_id(db: sqlite3.Cursor, id: int) -> Optional[Post]:
+    db.execute(
+        "SELECT date, post, is_true "
+        "FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY date) AS post_id FROM facts) "
+        "WHERE post_id=:post_id",
+        {"post_id": id},
+    )
+    response = db.fetchone()
+    if response:
+        date, post, is_true = response
         is_true = is_true == 1
     else:
-        post, is_true = "Pedro was too lazy to post today", True
-    last_date = date == datetime.date.today()
-    first_date = date == FIRST_DATE
+        return None
+
+    last_id = id == get_max_id(db)
+    first_id = id == 1
+
     return Post(
+        id=id,
         date=date,
         content=post,
         is_true=is_true,
-        last_date=last_date,
-        first_date=first_date,
+        last_id=last_id,
+        first_id=first_id,
     )
 
 
-@app.get("/api/date/{date}", response_model=Post)
-@app.get("/api/date", response_model=Post)
-async def get_date_content(
-    date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
-) -> Post:
-    today = datetime.date.today()
-    date = date or today
-    if not (FIRST_DATE <= date <= today):
-        raise HTTPException(status_code=404, detail="Date in the future")
-    return get_content(db, date)
+@app.get("/api/id/{id}", response_model=Post)
+@app.get("/api/id", response_model=Post)
+async def get_id_content(id: int = None, db: sqlite3.Cursor = Depends(get_db)) -> Post:
+    id = id or get_max_id(db)
+    post = get_content_by_id(db, id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Id not found")
+    return post
 
 
-@app.get("/{date}", response_class=HTMLResponse)
+@app.get("/{id}", response_class=HTMLResponse)
 @app.get("/", response_class=HTMLResponse)
-async def page_date(
-    request: Request, date: datetime.date = None, db: sqlite3.Cursor = Depends(get_db)
+async def page_id(
+    request: Request, id: int = None, db: sqlite3.Cursor = Depends(get_db)
 ):
-    today = datetime.date.today()
-    date = date or today
-    if not (FIRST_DATE <= date <= today):
-        raise HTTPException(status_code=404, detail="Date in the future")
-    post = get_content(db, date)
-    content, is_true = post.content, post.is_true
+    id = id or get_max_id(db)
+    post = get_content_by_id(db, id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Id not found")
+
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "date": date,
-            "content": content,
-            "isTrue": is_true,
-            "lastDate": post.last_date,
-            "firstDate": post.first_date,
+            "id": post.id,
+            "date": post.date,
+            "content": post.content,
+            "isTrue": post.is_true,
+            "lastId": post.last_id,
+            "firstId": post.first_id,
         },
     )
