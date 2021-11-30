@@ -67,7 +67,9 @@ class Post(BaseModel):
 
 def get_max_id(db: sqlite3.Cursor) -> int:
     db.execute(
-        "select max(post_id) from (select ROW_NUMBER() OVER(ORDER BY date) AS post_id from facts)"
+        "SELECT max(post_id) "
+        "FROM (SELECT ROW_NUMBER() OVER(ORDER BY date) AS post_id FROM facts WHERE date<=:date)",
+        {"date": datetime.date.today()},
     )
     response = db.fetchone()
     if response:
@@ -76,12 +78,14 @@ def get_max_id(db: sqlite3.Cursor) -> int:
         raise Exception("Bad connection to db.")
 
 
-def get_content_by_id(db: sqlite3.Cursor, id: int) -> Optional[Post]:
+def get_content_by_id(db: sqlite3.Cursor, id: int = None) -> Optional[Post]:
+    max_id = get_max_id(db)
+    id = id or max_id
     db.execute(
         "SELECT date, post, is_true "
-        "FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY date) AS post_id FROM facts) "
+        "FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY date) AS post_id FROM facts WHERE date<=:date) "
         "WHERE post_id=:post_id",
-        {"post_id": id},
+        {"post_id": id, "date": datetime.date.today()},
     )
     response = db.fetchone()
     if response:
@@ -90,7 +94,7 @@ def get_content_by_id(db: sqlite3.Cursor, id: int) -> Optional[Post]:
     else:
         return None
 
-    last_id = id == get_max_id(db)
+    last_id = id == max_id
     first_id = id == 1
 
     return Post(
@@ -106,7 +110,6 @@ def get_content_by_id(db: sqlite3.Cursor, id: int) -> Optional[Post]:
 @app.get("/api/id/{id}", response_model=Post)
 @app.get("/api/id", response_model=Post)
 async def get_id_content(id: int = None, db: sqlite3.Cursor = Depends(get_db)) -> Post:
-    id = id or get_max_id(db)
     post = get_content_by_id(db, id)
     if not post:
         raise HTTPException(status_code=404, detail="Id not found")
@@ -118,7 +121,6 @@ async def get_id_content(id: int = None, db: sqlite3.Cursor = Depends(get_db)) -
 async def page_id(
     request: Request, id: int = None, db: sqlite3.Cursor = Depends(get_db)
 ):
-    id = id or get_max_id(db)
     post = get_content_by_id(db, id)
     if not post:
         raise HTTPException(status_code=404, detail="Id not found")
